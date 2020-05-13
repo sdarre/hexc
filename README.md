@@ -13,9 +13,7 @@ The operations are as follows:
 | -hb      | Hexadecimal to binary  |
 | -hd      | Hexadecimal to decimal |
 
-hexbin can be fed several strings, separated by whitespace.  
-
-e.g.  
+hexbin can be fed several strings, separated by whitespace. For example:  
 ```
 ~$ ./hexbin -bd 10101 111
 10101 -> 21
@@ -23,6 +21,5 @@ e.g.
 ```  
 
 ## To-do
-* Implement functionality to convert from hexadecimal
 * Implement conversion to and from ASCII
-* Raise upper limit on conversion from decimal to hexadecimal
+* Raise upper limit on conversion from decimal to hexadecimal and vice versa

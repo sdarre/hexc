@@ -34,7 +34,7 @@ int main (int argc, char *argv[]) {
                 }
                 power++;        
             }
-            printf("%lu\n", result);
+            printf("%ld\n", result);
             LOOP:result = 0;
         }
     }
@@ -113,12 +113,70 @@ int main (int argc, char *argv[]) {
 
     // Hexadecimal -> Binary
     else if (!strncmp(conv, "-hb", 3)) {
-        printf("Coming soon.\n");
+        for (int i = 0; i < size; i++) {
+            printf("%s -> ", input[i]);
+            for (int k = 0; k < strlen(input[i]); k++) {
+                if (!(input[i][k] > 47 && input[i][k] < 58) && !(input[i][k] > 64 && input[i][k] < 71) && !(input[i][k] > 96 && input[i][k] < 103)) {
+                    printf("Input not in hexadecimal form.");
+                    goto LOOP2;
+                }
+            }
+            for (int k = 0; k < strlen(input[i]); k++) {
+                switch(input[i][k]){
+                    case '0': printf("0000"); break;
+                    case '1': printf("0001"); break;
+                    case '2': printf("0010"); break;
+                    case '3': printf("0011"); break;
+                    case '4': printf("0100"); break;
+                    case '5': printf("0101"); break;
+                    case '6': printf("0110"); break;
+                    case '7': printf("0111"); break;
+                    case '8': printf("1000"); break;
+                    case '9': printf("1001"); break;
+                    case 'a':
+                    case 'A': printf("1010"); break;
+                    case 'b':
+                    case 'B': printf("1011"); break;
+                    case 'c':
+                    case 'C': printf("1100"); break;
+                    case 'd':
+                    case 'D': printf("1101"); break;
+                    case 'e':
+                    case 'E': printf("1110"); break;
+                    case 'f':
+                    case 'F': printf("1111"); break;
+                }
+            }
+            LOOP2:printf("\n");
+        }
     }
 
     // Hexadecimal -> Decimal
     else if (!strncmp(conv, "-hd", 3)) {
-        printf("Coming soon.\n");
+        for (int i = 0; i < size; i++) {
+            long result = 0;
+            int power = 0;
+            if (strlen(input[i]) > 13) {
+                printf("%s -> Hexadecimal value too large.\n", input[i]);
+                continue;
+            }
+            for (int k = (strlen(input[i]) - 1); k >= 0; k--) {
+                if (input[i][k] > 47 && input[i][k] < 58) {
+                    result += (input[i][k] - 48) * pow(16, power++);
+                }
+                else if (input[i][k] > 64 && input[i][k] < 71) {
+                    result += (input[i][k] - 55) * pow(16, power++);
+                }
+                else if (input[i][k] > 96 && input[i][k] < 103) {
+                    result += (input[i][k] - 87) * pow(16, power++);
+                }
+                else {
+                    printf("%s -> Input not in hexadecimal form.\n", input[i]);
+                    break;
+                }
+            }
+            printf("%s -> %ld\n", input[i], result);
+        }
     }
 
     else {
