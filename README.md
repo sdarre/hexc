@@ -1,23 +1,27 @@
-# hexbin
+# hexc
 Terminal program for converting to and from binary, decimal, and hexadecimal.  
 
-Run `./hexbin {operation} {string1 string2 string3...}` to produce a converted string.  
-The operations are as follows:  
+Simply run `make` to install and `make clean` to uninstall.  
 
-| Operator | Description            |
-| ---------|------------------------|
-| -bd      | Binary to decimal      |
-| -bh      | Binary to hexadecimal  |
-| -db      | Decimal to binary      |
-| -dh      | Decimal to hexadecimal |
-| -hb      | Hexadecimal to binary  |
-| -hd      | Hexadecimal to decimal |
+Run `hexc {operator} {string1 string2 string3...}` to produce a converted string.  
+The operators are as follows:  
 
-hexbin can be fed several strings, separated by whitespace. For example:  
+| Operator | Description            | Limit                                                 |
+| ---------|------------------------| ------------------------------------------------------|
+| -bd      | Binary to decimal      | 11111111111111111111111111111111111111111111111111111 |
+| -bh      | Binary to hexadecimal  | Unlimited.                                            |
+| -db      | Decimal to binary      | 9199999999999999999                                   |
+| -dh      | Decimal to hexadecimal | 4294967295                                            |
+| -hb      | Hexadecimal to binary  | Unlimited.                                            |
+| -hd      | Hexadecimal to decimal | FFFFFFFFFFFFF                                         |
+
+hexc can be fed several strings, separated by whitespace. For example:  
 ```
-~$ ./hexbin -bd 10101 111
+~$ hexc -bd 10101 111
 10101 -> 21
 111 -> 7
+~$ hexc -hb 3b9ac9ff
+3B9AC9FF -> 00111011100110101100100111111111
 ```  
 
 ## To-do

@@ -5,6 +5,7 @@
 
 int main (int argc, char *argv[]) {
 
+    if (argc <= 1) exit(0);
     int size = argc - 2;
     char * input[size];
     
@@ -16,26 +17,26 @@ int main (int argc, char *argv[]) {
 
     // Binary -> Decimal
     if (!strncmp(conv, "-bd", 3)) { 
-        long result = 0;
+        unsigned long result = 0;
         for (int i = 0; i < size; i++) {
             int power = 0;
             printf("%s -> ", input[i]);
             for (int k = strlen(input[i]) - 1; k >= 0; k--) {
                 if (power > 52) {
                     printf("Binary value too large.\n");
-                    goto LOOP;
+                    goto L1;
                 }
                 if ((input[i][k] - 48) == 1) {
                     result += pow(2, power);
                 }
                 else if ((input[i][k] - 48) != 0) {
                     printf("Input not in binary form.\n");
-                    goto LOOP;
+                    goto L1;
                 }
                 power++;        
             }
-            printf("%ld\n", result);
-            LOOP:result = 0;
+            printf("%lu\n", result);
+            L1:result = 0;
         }
     }
 
@@ -80,8 +81,8 @@ int main (int argc, char *argv[]) {
     else if (!strncmp(conv, "-db", 3)) { 
         for (int i = 0; i < size; i++) {
             printf("%s -> ", input[i]);
-            long vector[32];
-            long num = atol(input[i]);
+            long vector[64];
+            unsigned long num = atol(input[i]);
             if (num == 0) {
                 printf("0\n");
                 continue;
@@ -102,11 +103,12 @@ int main (int argc, char *argv[]) {
     // Decimal -> Hexadecimal
     else if (!strncmp(conv, "-dh", 3)) {
         for (int i = 0; i < size; i++) {
-            if (atoi(input[i]) > 999999999) {
+            if (atol(input[i]) > 4294967295) {
                 printf("%s -> Decimal value too large.\n", input[i]);
+                continue;
             }
-            else {
-                printf("%s -> %X\n", input[i], atoi(input[i]));
+            if (1 > 0) {
+                printf("%s -> %X\n", input[i], atol(input[i]));
             }
         }
     }
@@ -118,7 +120,7 @@ int main (int argc, char *argv[]) {
             for (int k = 0; k < strlen(input[i]); k++) {
                 if (!(input[i][k] > 47 && input[i][k] < 58) && !(input[i][k] > 64 && input[i][k] < 71) && !(input[i][k] > 96 && input[i][k] < 103)) {
                     printf("Input not in hexadecimal form.");
-                    goto LOOP2;
+                    goto L2;
                 }
             }
             for (int k = 0; k < strlen(input[i]); k++) {
@@ -147,7 +149,7 @@ int main (int argc, char *argv[]) {
                     case 'F': printf("1111"); break;
                 }
             }
-            LOOP2:printf("\n");
+            L2:printf("\n");
         }
     }
 
