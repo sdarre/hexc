@@ -3,7 +3,7 @@ Terminal program for converting to and from binary, decimal, and hexadecimal.
 
 Simply run `make` to install and `make clean` to uninstall.  
 
-Run `hexc {operator} {string1 string2 string3...}` to produce a converted string.  
+Run `hexc {operator} {string1 string2 string3...}` to produce a converted string or series of strings.  
 
 The operators are as follows:  
 
@@ -27,4 +27,5 @@ hexc can be fed several strings, separated by whitespace. For example:
 
 ### To-do
 * Implement conversion to and from ASCII
+* Implement the ability to feed text files as input
 * Raise upper limit on conversion from decimal to hexadecimal and vice versa
