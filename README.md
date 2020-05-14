@@ -21,8 +21,9 @@ hexc can be fed several strings, separated by whitespace. For example:
 ~$ hexc -bd 10101 111
 10101 -> 21
 111 -> 7
-~$ hexc -hb 3b9ac9ff
+~$ hexc -hb 3b9ac9ff ABC123
 3B9AC9FF -> 00111011100110101100100111111111
+ABC123 -> 101010111100000100100011
 ```  
 
 ### To-do
