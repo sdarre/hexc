@@ -1,10 +1,8 @@
 ## hexc
 Terminal program for converting to and from binary, decimal, and hexadecimal.  
 
-### Installation and removal
 Simply run `make` to install and `make clean` to uninstall.  
 
-### Operation
 Run `hexc {operator} {string1 string2 string3...}` to produce a converted string.  
 
 The operators are as follows:  
