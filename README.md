@@ -4,9 +4,10 @@ Terminal program for converting to and from binary, decimal, and hexadecimal.
 Simply run `make` to install and `make clean` to uninstall.  
 
 Run `hexc {operator} {string1 string2 string3...}` to produce a converted string.  
+
 The operators are as follows:  
 
-| Operator | Description            | Limit                                                 |
+| Operator | Description            | Limit (per string)                                    |
 | ---------|------------------------| ------------------------------------------------------|
 | -bd      | Binary to decimal      | 11111111111111111111111111111111111111111111111111111 |
 | -bh      | Binary to hexadecimal  | Unlimited.                                            |
