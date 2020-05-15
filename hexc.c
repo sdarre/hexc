@@ -2,7 +2,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#include <limits.h>
+#define MAX_UINT 4294967295
 
 
 void BinToDec(char *input[], int size);
@@ -11,11 +11,15 @@ void DecToBin(char *input[], int size);
 void DecToHex(char *input[], int size);
 void HexToBin(char *input[], int size);
 void HexToDec(char *input[], int size);
+void PrintHelp();
 
 
 int main (int argc, char *argv[]) {
 
-    if (argc <= 1) exit(0);
+    if (argc <= 1) {
+        printf("No arguments provided. Run \"hexc -h\" or \"hexc --help\" for help.\n");
+        exit(0);
+    }
     int size = argc - 2;
     char * input[size];
     char * conv = argv[1];
@@ -30,7 +34,8 @@ int main (int argc, char *argv[]) {
     else if (!strncmp(conv, "-dh", 4)) { DecToHex(input, size); }
     else if (!strncmp(conv, "-hb", 4)) { HexToBin(input, size); }
     else if (!strncmp(conv, "-hd", 4)) { HexToDec(input, size); }
-    else { printf("Invalid conversion type.\n"); }
+    else if (!strncmp(conv, "-h", 2) || !strncmp(conv, "--help", 6)) { PrintHelp(); }
+    else { printf("Invalid argument.\n"); }
 
     return 0;
 }
@@ -39,24 +44,26 @@ int main (int argc, char *argv[]) {
 void BinToDec(char *input[], int size) {
     unsigned long result = 0;
     for (int i = 0; i < size; i++) {
-        int power = 0;
+        int power = 0, valid = 1;
         printf("%s -> ", input[i]);
         for (int k = strlen(input[i]) - 1; k >= 0; k--) {
             if (power > 52) {
                 printf("Binary value too large.\n");
-                goto L1;
+                valid--;
+                break;
             }
-            if ((input[i][k] - 48) == 1) {
+            if ((input[i][k] - '0') == 1) {
                 result += pow(2, power);
             }
-            else if ((input[i][k] - 48) != 0) {
+            else if ((input[i][k] - '0') != 0) {
                 printf("Input not in binary form.\n");
-                goto L1;
+                valid--;
+                break;
             }
             power++;        
         }
-        printf("%lu\n", result);
-        L1:result = 0;
+        if (valid) printf("%lu\n", result);
+        result = 0;
     }
 }
 
@@ -65,24 +72,28 @@ void BinToHex(char *input[], int size) {
     for (int i = 0; i < size; i++) {
         int power = 0, byte = 0, counter = 0;
         char * str = (char *) malloc(sizeof(char) * strlen(input[i]));
+        if (!str) {
+            printf("Memory error.\n");
+            exit(0);
+        }
         printf("%s -> ", input[i]);
         for (int k = strlen(input[i]) - 1; k >= 0; k--) {
-            if ((input[i][k] - 48) == 1) {
+            if ((input[i][k] - '0') == 1) {
                 byte += pow(2, power);
             }
-            else if ((input[i][k] - 48) != 0) {
+            else if ((input[i][k] - '0') != 0) {
                 printf("Input not in binary form.");
                 break;
             }
             power++;
             if (power == 4 || k == 0) {
                 if (byte > 9) { 
-                    byte += 55; 
+                    byte += '7'; 
                 }
                 else { 
-                    byte += 48; 
+                    byte += '0'; 
                 }
-                if (!(byte == 48 && k == 0)) {
+                if (!(byte == '0' && k == 0)) {
                     str[counter++] = (char) byte;
                 }
                 power = 0;
@@ -101,7 +112,7 @@ void BinToHex(char *input[], int size) {
 void DecToBin(char *input[], int size) {
     for (int i = 0; i < size; i++) {
         printf("%s -> ", input[i]);
-        long vector[64];
+        int vector[64];
         unsigned long num = atol(input[i]);
         if (num == 0) {
             printf("0\n");
@@ -123,25 +134,27 @@ void DecToBin(char *input[], int size) {
 
 void DecToHex(char *input[], int size) {
     for (int i = 0; i < size; i++) {
-        if (atol(input[i]) > UINT_MAX) {
+        if (atol(input[i]) > MAX_UINT) {
             printf("%s -> Decimal value too large.\n", input[i]);
             continue;
         }
-        printf("%s -> %X\n", input[i], atol(input[i]));
+        printf("%s -> %lX\n", input[i], atol(input[i]));
     }
 }
 
 
 void HexToBin(char *input[], int size) {
     for (int i = 0; i < size; i++) {
+        int valid = 1;
         printf("%s -> ", input[i]);
         for (int k = 0; k < strlen(input[i]); k++) {
-            if (!(input[i][k] > 47 && input[i][k] < 58) && !(input[i][k] > 64 && input[i][k] < 71) && !(input[i][k] > 96 && input[i][k] < 103)) {
+            if (!(input[i][k] > '/' && input[i][k] < ':') && !(input[i][k] > '@' && input[i][k] < 'G') && !(input[i][k] > '`' && input[i][k] < 'g')) {
                 printf("Input not in hexadecimal form.");
-                goto L2;
+                valid--;
+                break;
             }
         }
-        for (int k = 0; k < strlen(input[i]); k++) {
+        for (int k = 0; k < strlen(input[i]) && valid; k++) {
             switch(input[i][k]){
                 case '0': printf("0000"); break;
                 case '1': printf("0001"); break;
@@ -167,7 +180,7 @@ void HexToBin(char *input[], int size) {
                 case 'F': printf("1111"); break;
             }
         }
-        L2:printf("\n");
+        printf("\n");
     }
 }
 
@@ -175,26 +188,45 @@ void HexToBin(char *input[], int size) {
 void HexToDec(char *input[], int size) {
     for (int i = 0; i < size; i++) {
         long result = 0;
-        int power = 0;
+        int power = 0, valid = 1;
         if (strlen(input[i]) > 13) {
             printf("%s -> Hexadecimal value too large.\n", input[i]);
             continue;
         }
         for (int k = (strlen(input[i]) - 1); k >= 0; k--) {
-            if (input[i][k] > 47 && input[i][k] < 58) {
-                result += (input[i][k] - 48) * pow(16, power++);
+            if (input[i][k] > '/' && input[i][k] < ':') {
+                result += (input[i][k] - '0') * pow(16, power++);
             }
             else if (input[i][k] > 64 && input[i][k] < 71) {
-                result += (input[i][k] - 55) * pow(16, power++);
+                result += (input[i][k] - '7') * pow(16, power++);
             }
             else if (input[i][k] > 96 && input[i][k] < 103) {
-                result += (input[i][k] - 87) * pow(16, power++);
+                result += (input[i][k] - 'W') * pow(16, power++);
             }
             else {
                 printf("%s -> Input not in hexadecimal form.\n", input[i]);
+                valid--;
                 break;
             }
         }
-        printf("%s -> %ld\n", input[i], result);
+        if (valid) printf("%s -> %ld\n", input[i], result);
     }
+}
+
+
+void PrintHelp() {
+    printf("\nRun \"hexc {operator} {string1 string2 string3...}\" to produce a converted string or series of strings.\n");
+    printf("The operators are as follows:\n\n");
+    printf("---------------------------------------------------------------------------------------------\n");
+    printf("| Operator |      Description       |                  Limit (per string)                   |\n");
+    printf("| ---------|------------------------| ------------------------------------------------------|\n");
+    printf("|   -bd    | Binary to decimal      | 11111111111111111111111111111111111111111111111111111 |\n");
+    printf("|   -bh    | Binary to hexadecimal  | Unlimited.                                            |\n");
+    printf("|   -db    | Decimal to binary      | 9199999999999999999                                   |\n");
+    printf("|   -dh    | Decimal to hexadecimal | 4294967295                                            |\n");
+    printf("|   -hb    | Hexadecimal to binary  | Unlimited.                                            |\n");
+    printf("|   -hd    | Hexadecimal to decimal | FFFFFFFFFFFFF                                         |\n");
+    printf("---------------------------------------------------------------------------------------------\n\n");
+    printf("hexc can be fed several strings, separated by whitespace. For example:\n\n");  
+    printf("| ~$ hexc -bd 10101 111\n| 10101 -> 21\n| 111 -> 7\n\n");
 }
