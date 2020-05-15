@@ -154,7 +154,7 @@ void HexToBin(char * input) {
         if (!(input[i] > ('0' - 1) && input[i] < ('9' + 1)) 
             && !(input[i] > ('A' - 1) && input[i] < 'G') 
             && !(input[i] > ('a' - 1) && input[i] < 'g')) {
-            printf("Input not in hexadecimal form.");
+            printf("Input not in hexadecimal form.\n");
             return;
         }
     }
