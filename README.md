@@ -1,7 +1,8 @@
 ## hexc
 Terminal program for converting to and from binary, decimal, and hexadecimal.  
 
-Simply run `make` to install and `make clean` to uninstall.  
+To build, run `make`. To install, build and run `sudo make install`.  To
+uninstall, run `sudo make uninstall`.
 
 Run `hexc {operator} {string1 string2 string3...}` to produce a converted string or series of strings.  
 
