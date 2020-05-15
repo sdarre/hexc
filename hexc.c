@@ -2,7 +2,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#define MAX_UINT 4294967295
+#define MAX_LONG 9223372036854775807
 
 
 void BinToDec(char *input[], int size);
@@ -105,6 +105,7 @@ void BinToHex(char *input[], int size) {
         }
         printf("\n");
         free(str);
+        str = NULL;
     }
 }
 
@@ -134,7 +135,9 @@ void DecToBin(char *input[], int size) {
 
 void DecToHex(char *input[], int size) {
     for (int i = 0; i < size; i++) {
-        if (atol(input[i]) > MAX_UINT) {
+        char * ptr;
+        unsigned long num = strtoul(input[i], &ptr, 10);
+        if (num > MAX_LONG) {
             printf("%s -> Decimal value too large.\n", input[i]);
             continue;
         }
