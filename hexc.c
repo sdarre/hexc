@@ -2,7 +2,6 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#include <limits.h>
 #include <errno.h>
 
 
@@ -49,25 +48,23 @@ int main (int argc, char *argv[]) {
 
 void BinToDec(char * input) {
     unsigned long result = 0;
-    int power = 0, valid = 1;
+    int power = 0;
     printf("%s -> ", input);
     for (int i = strlen(input) - 1; i >= 0; i--) {
         if (power > 52) {
             printf("Binary value too large.\n");
-            valid--;
-            break;
+            return;
         }
         if ((input[i] - '0') == 1) {
             result += pow(2, power);
         }
         else if ((input[i] - '0') != 0) {
             printf("Input not in binary form.\n");
-            valid--;
-            break;
+            return;
         }
         power++;        
     }
-    if (valid) printf("%lu\n", result);
+    printf("%lu\n", result);
     result = 0;
 }
 
@@ -152,18 +149,16 @@ void DecToHex(char * input) {
 
 
 void HexToBin(char * input) {
-    int valid = 1;
     printf("%s -> ", input);
     for (int i = 0; i < strlen(input); i++) {
         if (!(input[i] > ('0' - 1) && input[i] < ('9' + 1)) 
             && !(input[i] > ('A' - 1) && input[i] < 'G') 
             && !(input[i] > ('a' - 1) && input[i] < 'g')) {
             printf("Input not in hexadecimal form.");
-            valid--;
-            break;
+            return;
         }
     }
-    for (int i = 0; i < strlen(input) && valid; i++) {
+    for (int i = 0; i < strlen(input); i++) {
         switch(input[i]){
             case '0': printf("0000"); break;
             case '1': printf("0001"); break;
@@ -195,7 +190,7 @@ void HexToBin(char * input) {
 
 void HexToDec(char * input) {
     unsigned long result = 0;
-    int power = 0, valid = 1;
+    int power = 0;
     if (strlen(input) > 13) {
         printf("%s -> Hexadecimal value too large.\n", input);
         return;
@@ -212,11 +207,10 @@ void HexToDec(char * input) {
         }
         else {
             printf("%s -> Input not in hexadecimal form.\n", input);
-            valid--;
-            break;
+            return;
         }
     }
-    if (valid) printf("%s -> %lu\n", input, result);
+    printf("%s -> %lu\n", input, result);
 }
 
 
