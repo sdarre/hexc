@@ -1,6 +1,13 @@
-all:
+all: build
+
+build:
 	gcc hexc.c -lm -o hexc
-	sudo mv hexc /usr/local/bin
+
+install:
+	mv hexc /usr/local/bin
+
+uninstall:
+	rm /usr/local/bin/hexc
 
 clean:
-	sudo rm -f /usr/local/bin/hexc
+	rm hexc
