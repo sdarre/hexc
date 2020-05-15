@@ -88,7 +88,7 @@ void BinToHex(char *input[], int size) {
             power++;
             if (power == 4 || k == 0) {
                 if (byte > 9) { 
-                    byte += '7'; 
+                    byte += ('A' - 10); 
                 }
                 else { 
                     byte += '0'; 
@@ -148,7 +148,9 @@ void HexToBin(char *input[], int size) {
         int valid = 1;
         printf("%s -> ", input[i]);
         for (int k = 0; k < strlen(input[i]); k++) {
-            if (!(input[i][k] > '/' && input[i][k] < ':') && !(input[i][k] > '@' && input[i][k] < 'G') && !(input[i][k] > '`' && input[i][k] < 'g')) {
+            if (!(input[i][k] > ('0' - 1) && input[i][k] < ('9' + 1)) 
+             && !(input[i][k] > ('A' - 1) && input[i][k] < 'G') 
+             && !(input[i][k] > ('a' - 1) && input[i][k] < 'g')) {
                 printf("Input not in hexadecimal form.");
                 valid--;
                 break;
@@ -194,14 +196,14 @@ void HexToDec(char *input[], int size) {
             continue;
         }
         for (int k = (strlen(input[i]) - 1); k >= 0; k--) {
-            if (input[i][k] > '/' && input[i][k] < ':') {
+            if (input[i][k] > ('0' - 1) && input[i][k] < ('9' + 1)) {
                 result += (input[i][k] - '0') * pow(16, power++);
             }
-            else if (input[i][k] > 64 && input[i][k] < 71) {
-                result += (input[i][k] - '7') * pow(16, power++);
+            else if (input[i][k] > ('A' - 1) && input[i][k] < 'G') {
+                result += (input[i][k] - ('A' - 10)) * pow(16, power++);
             }
-            else if (input[i][k] > 96 && input[i][k] < 103) {
-                result += (input[i][k] - 'W') * pow(16, power++);
+            else if (input[i][k] > ('a' - 1) && input[i][k] < 'g') {
+                result += (input[i][k] - ('a' - 10)) * pow(16, power++);
             }
             else {
                 printf("%s -> Input not in hexadecimal form.\n", input[i]);
