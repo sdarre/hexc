@@ -12,8 +12,8 @@ The operators are as follows:
 | ---------|------------------------| ------------------------------------------------------|
 | -bd      | Binary to decimal      | 11111111111111111111111111111111111111111111111111111 |
 | -bh      | Binary to hexadecimal  | Unlimited.                                            |
-| -db      | Decimal to binary      | 9199999999999999999                                   |
-| -dh      | Decimal to hexadecimal | 9223372036854775807                                   |
+| -db      | Decimal to binary      | 18446744073709551615                                  |
+| -dh      | Decimal to hexadecimal | 18446744073709551615                                  |
 | -hb      | Hexadecimal to binary  | Unlimited.                                            |
 | -hd      | Hexadecimal to decimal | FFFFFFFFFFFFF                                         |
 
@@ -31,4 +31,4 @@ ABC123 -> 101010111100000100100011
 * Implement conversion to and from ASCII
 * Implement the ability to feed text files as input
 * Figure out some better way to implement HexToBin (I know it's ugly)
-* Raise upper limit on conversion from decimal to hexadecimal and vice versa
+* Raise limit on BinToDec and HexToDec

@@ -2,7 +2,8 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#define MAX_LONG 9223372036854775807
+#include <limits.h>
+#include <errno.h>
 
 
 void BinToDec(char *input[], int size);
@@ -112,9 +113,15 @@ void BinToHex(char *input[], int size) {
 
 void DecToBin(char *input[], int size) {
     for (int i = 0; i < size; i++) {
-        printf("%s -> ", input[i]);
         int vector[64];
-        unsigned long num = atol(input[i]);
+        char * ptr;
+        unsigned long num = strtoul(input[i], &ptr, 10);
+        if (errno == ERANGE) {
+            printf("Decimal value too large.\n");
+            errno = 0;
+            continue;
+        }
+        printf("%lu -> ", num);
         if (num == 0) {
             printf("0\n");
             continue;
@@ -137,11 +144,12 @@ void DecToHex(char *input[], int size) {
     for (int i = 0; i < size; i++) {
         char * ptr;
         unsigned long num = strtoul(input[i], &ptr, 10);
-        if (num > MAX_LONG) {
-            printf("%s -> Decimal value too large.\n", input[i]);
+        if (errno == ERANGE) {
+            printf("Decimal value too large.\n");
+            errno = 0;
             continue;
         }
-        printf("%s -> %lX\n", input[i], atol(input[i]));
+        printf("%s -> %lX\n", input[i], num);
     }
 }
 
@@ -192,7 +200,7 @@ void HexToBin(char *input[], int size) {
 
 void HexToDec(char *input[], int size) {
     for (int i = 0; i < size; i++) {
-        long result = 0;
+        unsigned long result = 0;
         int power = 0, valid = 1;
         if (strlen(input[i]) > 13) {
             printf("%s -> Hexadecimal value too large.\n", input[i]);
@@ -214,7 +222,7 @@ void HexToDec(char *input[], int size) {
                 break;
             }
         }
-        if (valid) printf("%s -> %ld\n", input[i], result);
+        if (valid) printf("%s -> %lu\n", input[i], result);
     }
 }
 
