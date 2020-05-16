@@ -2,7 +2,8 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#define MAX_ULONG 18446744073709551615U
+#include <limits.h>
+
 
 void ArgumentParser(char * args[], int size);
 void Convert(char * input, int iBase, int oBase);
@@ -23,7 +24,7 @@ int main (int argc, char *argv[]) {
     return 0;
 }
 
-
+int valid = 1;
 void Convert(char * input, int iBase, int oBase) {
 
     if (iBase < 2 || iBase > 36 || oBase < 2 || oBase > 36) {
@@ -39,10 +40,7 @@ void Convert(char * input, int iBase, int oBase) {
     if (l == 0) {
         printf("0");
     }
-    else if (l >= MAX_ULONG) {
-        printf("Input value too large.");
-    }
-    else if (l != -1) {
+    else if (valid++) {
         s = oConvert(l, oBase);
         for (int i = strlen(s); i >= 0; i--) {
             printf("%c", s[i]);
@@ -50,6 +48,7 @@ void Convert(char * input, int iBase, int oBase) {
         free(s);
         s = NULL;
     }
+
     printf("\n");
 }
 
@@ -57,29 +56,38 @@ void Convert(char * input, int iBase, int oBase) {
 unsigned long iConvert(char * input, int iBase) {
 
     unsigned long result = 0;
+    unsigned long overflowCheck = 0;
     int power = 0;
 
     for (int i = (strlen(input) - 1); i >= 0; i--) {
+        
         if ((input[i] > ('0' - 1)) && (input[i] < ('9' + 1))) {
             result += (input[i] - '0') * (unsigned long) pow(iBase, power++);
         }
-        else if ((input[i] > ('A' - 1)) && (input[i] < ('Z' + 1)) && iBase > 10) {
+        else if ((input[i] > ('A' - 1)) && (input[i] < ('A' - 10 + iBase)) && iBase > 10) {
             result += (input[i] - ('A' - 10)) * (unsigned long) pow(iBase, power++);
         }
-        else if ((input[i] > ('a' - 1)) && (input[i] < ('z' + 1)) && iBase > 10) {
+        else if ((input[i] > ('a' - 1)) && (input[i] < ('a' - 10 + iBase)) && iBase > 10) {
             result += (input[i] - ('a' - 10)) * (unsigned long) pow(iBase, power++);
         }
         else {
             printf("Invalid input string.");
+            valid = 0;
             return -1;
         }
+
+        if (result < overflowCheck) {
+            printf("Input value too large.");
+            valid = 0;
+            return -1;
+        }
+        overflowCheck = result;
     }
     return result;
 }
 
 
 char * oConvert(unsigned long input, int oBase) {
-    
     char * vector = malloc(sizeof(char) * 64);
     if (!vector) {
         printf("Memory error.\n");
@@ -95,7 +103,7 @@ char * oConvert(unsigned long input, int oBase) {
             c = n + '0';
         }
         else {
-            c = n + ('A' - 10);
+            c = n + 'A' - 10;
         }
         vector[i++] = c;
     }
