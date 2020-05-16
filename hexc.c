@@ -24,6 +24,7 @@ int main (int argc, char *argv[]) {
     return 0;
 }
 
+
 int valid = 1;
 void Convert(char * input, int iBase, int oBase) {
 
@@ -48,7 +49,6 @@ void Convert(char * input, int iBase, int oBase) {
         free(s);
         s = NULL;
     }
-
     printf("\n");
 }
 
@@ -88,6 +88,7 @@ unsigned long iConvert(char * input, int iBase) {
 
 
 char * oConvert(unsigned long input, int oBase) {
+    
     char * vector = malloc(sizeof(char) * 64);
     if (!vector) {
         printf("Memory error.\n");
