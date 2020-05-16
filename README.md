@@ -8,14 +8,14 @@ Run `hexc {operator} {strings}` or `hexc {-i[input base size] -o[output base siz
 
 The operators are as follows:  
 
-| Operator | Description            | Operator | Description            |
-|----------|------------------------|----------|------------------------|
-| -bd      | Binary to decimal      | -hb      | Hexadecimal to binary  |
-| -bh      | Binary to hexadecimal  | -hd      | Hexadecimal to decimal |
-| -bo      | Binary to octal        | -ho      | Hexadecimal to octal   |
-| -db      | Decimal to binary      | -ob      | Octal to binary        |
-| -dh      | Decimal to hexadecimal | -od      | Octal to decimal       |
-| -do      | Decimal to octal       | -oh      | Octal to hexadecimal   |  
+| Operator   | Description            | Operator   | Description            |
+|:----------:|------------------------|:----------:|------------------------|
+| -bd        | Binary to decimal      | -hb        | Hexadecimal to binary  |
+| -bh        | Binary to hexadecimal  | -hd        | Hexadecimal to decimal |
+| -bo        | Binary to octal        | -ho        | Hexadecimal to octal   |
+| -db        | Decimal to binary      | -ob        | Octal to binary        |
+| -dh        | Decimal to hexadecimal | -od        | Octal to decimal       |
+| -do        | Decimal to octal       | -oh        | Octal to hexadecimal   |  
 
 hexc can be fed several strings, separated by whitespace. Bases can range from 2 to 36 (inclusive).  
 
