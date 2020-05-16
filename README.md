@@ -1,10 +1,10 @@
 ## hexc
-Terminal program for converting between bases.  
+Terminal program for converting to and from any base from 2 to 36.  
 
 To build, run `make`. To install, build and run `sudo make install`.  To
 uninstall, run `sudo make uninstall`.
 
-Run `hexc {operator} {string1 string2 string3...}` or `hexc {-i[input base size] -o[output base size] {string1 string2 string3...}` to produce a converted string or series of strings.  
+Run `hexc {operator} {strings}` or `hexc {-i[input base size] -o[output base size]} {strings}` to produce a converted string or series of strings.  
 
 The operators are as follows:  
 
