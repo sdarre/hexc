@@ -2,15 +2,11 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#include <errno.h>
 
-
-void BinToDec(char * input);
-void BinToHex(char * input);
-void DecToBin(char * input);
-void DecToHex(char * input);
-void HexToBin(char * input);
-void HexToDec(char * input);
+void ArgumentParser(char * args[], int size);
+void Convert(char * input, int iBase, int oBase);
+unsigned long iConvert(char * input, int iBase);
+char * oConvert(unsigned long input, int oBase);
 void PrintHelp();
 
 
@@ -20,213 +16,199 @@ int main (int argc, char *argv[]) {
         PrintHelp();
         return 0;
     }
-    char * conv = argv[1];
 
-    void (*conversion)(char*);
-
-    if (!strncmp(conv, "-bd", 4)) { conversion = BinToDec; }
-    else if (!strncmp(conv, "-bh", 4)) { conversion = BinToHex; }
-    else if (!strncmp(conv, "-db", 4)) { conversion = DecToBin; }
-    else if (!strncmp(conv, "-dh", 4)) { conversion = DecToHex; }
-    else if (!strncmp(conv, "-hb", 4)) { conversion = HexToBin; }
-    else if (!strncmp(conv, "-hd", 4)) { conversion = HexToDec; }
-    else {
-        if (strncmp(conv, "-h", 2) || strncmp(conv, "--help", 6)) { 
-            printf("Invalid argument.\n");
-        }
-        PrintHelp(); 
-        return 0;
-    }
-
-    for (int i = 2; i < argc; i++) {
-       conversion(argv[i]);
-    }
-
+    ArgumentParser(argv, (argc - 2));
+    
     return 0;
 }
 
 
-void BinToDec(char * input) {
-    unsigned long result = 0;
-    int power = 0;
-    printf("%s -> ", input);
-    for (int i = strlen(input) - 1; i >= 0; i--) {
-        if (power > 52) {
-            printf("Binary value too large.\n");
-            return;
-        }
-        if ((input[i] - '0') == 1) {
-            result += pow(2, power);
-        }
-        else if ((input[i] - '0') != 0) {
-            printf("Input not in binary form.\n");
-            return;
-        }
-        power++;        
+void Convert(char * input, int iBase, int oBase) {
+
+    if (iBase < 2 || iBase > 36 || oBase < 2 || oBase > 36) {
+        printf("Bases must be between 2 and 36 (inclusive).\n");
+        return;
     }
-    printf("%lu\n", result);
-    result = 0;
+
+    printf("%s -> ", input);
+
+    unsigned long l = iConvert(input, iBase);
+    char * s;
+
+    if (l != -1) {
+        s = oConvert(l, oBase);
+        for (int i = strlen(s); i >= 0; i--) {
+            printf("%c", s[i]);
+        }
+        free(s);
+        s = NULL;
+    }
+    printf("\n");
 }
 
 
-void BinToHex(char * input) {
-    int power = 0, byte = 0, counter = 0;
-    char * str = (char *) malloc(sizeof(char) * strlen(input));
-    if (!str) {
+unsigned long iConvert(char * input, int iBase) {
+
+    unsigned long result = 0;
+    int power = 0;
+
+    for (int i = (strlen(input) - 1); i >= 0; i--) {
+        if ((input[i] > ('0' - 1)) && (input[i] < ('9' + 1))) {
+            result += (input[i] - '0') * pow(iBase, power++);
+        }
+        else if ((((input[i] > ('A' - 1)) && (input[i] < ('Z' + 1))) || ((input[i] > ('a' - 1)) && (input[i] < ('z' + 1)))) && iBase > 10) {
+            result += (input[i] - ('A' - 10)) * pow(iBase, power++);
+        }
+        else {
+            printf("Invalid input string.");
+            return -1;
+        }
+    }
+    return result;
+}
+
+
+char * oConvert(unsigned long input, int oBase) {
+
+    char * vector = malloc(sizeof(char) * 64);
+
+    if (!vector) {
         printf("Memory error.\n");
         exit(0);
     }
-    printf("%s -> ", input);
-    for (int i = strlen(input) - 1; i >= 0; i--) {
-        if ((input[i] - '0') == 1) {
-            byte += pow(2, power);
-        }
-        else if ((input[i] - '0') != 0) {
-            printf("Input not in binary form.");
-            break;
-        }
-        power++;
-        if (power == 4 || i == 0) {
-            if (byte > 9) { 
-                byte += ('A' - 10); 
-            }
-            else { 
-                byte += '0'; 
-            }
-            if (!(byte == '0' && i == 0)) {
-                str[counter++] = (char) byte;
-            }
-            power = 0;
-            byte = 0;
-        }
-    }
-    for (int i = strlen(str); i >= 0; i--) {
-        printf("%c", str[i]);
-    }
-    printf("\n");
-    free(str);
-    str = NULL;
-}
 
-
-void DecToBin(char * input) {
-    int vector[64];
-    char * ptr;
-    unsigned long num = strtoul(input, &ptr, 10);
-    if (errno == ERANGE) {
-        printf("%s -> Decimal value too large.\n", input);
-        errno = 0;
-        return;
-    }
-    printf("%lu -> ", num);
-    if (num == 0) {
-        printf("0\n");
-        return;
-    }
-    int n = 0;
-    while (num > 0) {
-        vector[n] = num % 2;
-        num = num / 2;
-        n++;
-    }
-    for (int i = n - 1; i >= 0; i--) {
-        printf("%d", vector[i]);
-    }
-    printf("\n");
-}
-
-
-void DecToHex(char * input) {
-    char * ptr;
-    unsigned long num = strtoul(input, &ptr, 10);
-    if (errno == ERANGE) {
-        printf("%s -> Decimal value too large.\n", input);
-        errno = 0;
-        return;
-    }
-    printf("%s -> %lX\n", input, num);
-}
-
-
-void HexToBin(char * input) {
-    printf("%s -> ", input);
-    for (int i = 0; i < strlen(input); i++) {
-        if (!(input[i] > ('0' - 1) && input[i] < ('9' + 1)) 
-            && !(input[i] > ('A' - 1) && input[i] < 'G') 
-            && !(input[i] > ('a' - 1) && input[i] < 'g')) {
-            printf("Input not in hexadecimal form.\n");
-            return;
-        }
-    }
-    for (int i = 0; i < strlen(input); i++) {
-        switch(input[i]){
-            case '0': printf("0000"); break;
-            case '1': printf("0001"); break;
-            case '2': printf("0010"); break;
-            case '3': printf("0011"); break;
-            case '4': printf("0100"); break;
-            case '5': printf("0101"); break;
-            case '6': printf("0110"); break;
-            case '7': printf("0111"); break;
-            case '8': printf("1000"); break;
-            case '9': printf("1001"); break;
-            case 'a':
-            case 'A': printf("1010"); break;
-            case 'b':
-            case 'B': printf("1011"); break;
-            case 'c':
-            case 'C': printf("1100"); break;
-            case 'd':
-            case 'D': printf("1101"); break;
-            case 'e':
-            case 'E': printf("1110"); break;
-            case 'f':
-            case 'F': printf("1111"); break;
-        }
-    }
-    printf("\n");
-}
-
-
-void HexToDec(char * input) {
-    unsigned long result = 0;
-    int power = 0;
-    if (strlen(input) > 13) {
-        printf("%s -> Hexadecimal value too large.\n", input);
-        return;
-    }
-    for (int i = (strlen(input) - 1); i >= 0; i--) {
-        if (input[i] > ('0' - 1) && input[i] < ('9' + 1)) {
-            result += (input[i] - '0') * pow(16, power++);
-        }
-        else if (input[i] > ('A' - 1) && input[i] < 'G') {
-            result += (input[i] - ('A' - 10)) * pow(16, power++);
-        }
-        else if (input[i] > ('a' - 1) && input[i] < 'g') {
-            result += (input[i] - ('a' - 10)) * pow(16, power++);
+    int i = 0;
+    while (input > 0) {
+        char c;
+        int n = input % oBase;
+        input = input / oBase;
+        if (n < 10) {
+            c = n + '0';
         }
         else {
-            printf("%s -> Input not in hexadecimal form.\n", input);
-            return;
+            c = n + ('A' - 10);
+        }
+        vector[i++] = c;
+    }
+    return vector;
+}
+
+
+void ArgumentParser(char * args[], int size) {
+
+    if (!strncmp(args[1], "-i", 2) && !strncmp(args[2], "-o", 2)) {
+        size--;
+        char iBase[3];
+        char oBase[3];
+        strncpy(iBase, args[1] + 2, strlen(args[1]) - 1);
+        strncpy(oBase, args[2] + 2, strlen(args[2]) - 1);
+        for (int i = 0; i < size; i++) {
+            Convert(args[3 + i], atoi(iBase), atoi(oBase));
         }
     }
-    printf("%s -> %lu\n", input, result);
+
+    else if (!strncmp(args[1], "-bd", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 2, 10);
+        }
+    }
+
+    else if (!strncmp(args[1], "-bh", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 2, 16);
+        }        
+    }
+
+    else if (!strncmp(args[1], "-bo", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 2, 8);
+        }        
+    }
+
+    else if (!strncmp(args[1], "-hb", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 16, 2);
+        }        
+    }
+
+    else if (!strncmp(args[1], "-hd", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 16, 10);
+        }        
+    }
+
+    else if (!strncmp(args[1], "-ho", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 16, 8);
+        }        
+    }
+
+    else if (!strncmp(args[1], "-db", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 10, 2);
+        }        
+    }
+
+    else if (!strncmp(args[1], "-dh", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 10, 16);
+        }        
+    }
+
+    else if (!strncmp(args[1], "-do", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 10, 8);
+        }        
+    }
+
+    else if (!strncmp(args[1], "-ob", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 8, 2);
+        }        
+    }
+
+    else if (!strncmp(args[1], "-od", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 8, 10);
+        }        
+    }
+
+    else if (!strncmp(args[1], "-oh", 4)) {
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], 8, 16);
+        }        
+    }
+
+    else if (!strncmp(args[1], "-h", 2) || !strncmp(args[1], "--help", 6)) {
+        PrintHelp(); 
+    }
+
+    else {
+        printf("Invalid argument.\n");
+    }
 }
 
 
 void PrintHelp() {
-    printf("Run \"hexc {operator} {string1 string2 string3...}\" to produce a converted string or series of strings.\n");
+    printf("Run \"hexc {operator} {string1 string2 string3...}\"\n");
+    printf("or \"hexc {-i[input base size] -o[output base size] {string1 string2 string3...}\"\n");
+    printf("to produce a converted string or series of strings.\n");
     printf("The operators are as follows:\n\n");
-    printf("---------------------------------------------------------------------------------------------\n");
-    printf("| Operator |      Description       |                  Limit (per string)                   |\n");
-    printf("| ---------|------------------------| ------------------------------------------------------|\n");
-    printf("|   -bd    | Binary to decimal      | 11111111111111111111111111111111111111111111111111111 |\n");
-    printf("|   -bh    | Binary to hexadecimal  | Unlimited.                                            |\n");
-    printf("|   -db    | Decimal to binary      | 9199999999999999999                                   |\n");
-    printf("|   -dh    | Decimal to hexadecimal | 4294967295                                            |\n");
-    printf("|   -hb    | Hexadecimal to binary  | Unlimited.                                            |\n");
-    printf("|   -hd    | Hexadecimal to decimal | FFFFFFFFFFFFF                                         |\n");
-    printf("---------------------------------------------------------------------------------------------\n\n");
+    printf("| Operator |      Description       |\n");
+    printf("|   -bd    | Binary to decimal      |\n");
+    printf("|   -bh    | Binary to hexadecimal  |\n");
+    printf("|   -bo    | Binary to octal        |\n");
+    printf("|   -db    | Decimal to binary      |\n");
+    printf("|   -dh    | Decimal to hexadecimal |\n");
+    printf("|   -do    | Decimal to octal       |\n");
+    printf("|   -hb    | Hexadecimal to binary  |\n");
+    printf("|   -hd    | Hexadecimal to decimal |\n");
+    printf("|   -ho    | Hexadecimal to octal   |\n");
+    printf("|   -ob    | Octal to binary        |\n");
+    printf("|   -od    | Octal to decimal       |\n");
+    printf("|   -oh    | Octal to hexadecimal   |\n\n");
+    printf("Bases can range from 2 to 36 (inclusive).\n");
     printf("hexc can be fed several strings, separated by whitespace. For example:\n\n");  
     printf("| ~$ hexc -bd 10101 111\n| 10101 -> 21\n| 111 -> 7\n");
+    printf("| ~$ hexc -i8 -o16 \n| 312 -> CA\n");
 }
