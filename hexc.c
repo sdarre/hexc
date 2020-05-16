@@ -107,8 +107,7 @@ void ArgumentParser(char * args[], int size) {
 
     if (!strncmp(args[1], "-i", 2) && !strncmp(args[2], "-o", 2)) {
         size--;
-        char iBase[3];
-        char oBase[3];
+        char iBase[3], oBase[3];
         strncpy(iBase, args[1] + 2, strlen(args[1]) - 1);
         strncpy(oBase, args[2] + 2, strlen(args[2]) - 1);
         for (int i = 0; i < size; i++) {
@@ -116,84 +115,31 @@ void ArgumentParser(char * args[], int size) {
         }
     }
 
-    else if (!strncmp(args[1], "-bd", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 2, 10);
-        }
-    }
-
-    else if (!strncmp(args[1], "-bh", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 2, 16);
-        }        
-    }
-
-    else if (!strncmp(args[1], "-bo", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 2, 8);
-        }        
-    }
-
-    else if (!strncmp(args[1], "-hb", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 16, 2);
-        }        
-    }
-
-    else if (!strncmp(args[1], "-hd", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 16, 10);
-        }        
-    }
-
-    else if (!strncmp(args[1], "-ho", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 16, 8);
-        }        
-    }
-
-    else if (!strncmp(args[1], "-db", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 10, 2);
-        }        
-    }
-
-    else if (!strncmp(args[1], "-dh", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 10, 16);
-        }        
-    }
-
-    else if (!strncmp(args[1], "-do", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 10, 8);
-        }        
-    }
-
-    else if (!strncmp(args[1], "-ob", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 8, 2);
-        }        
-    }
-
-    else if (!strncmp(args[1], "-od", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 8, 10);
-        }        
-    }
-
-    else if (!strncmp(args[1], "-oh", 4)) {
-        for (int i = 0; i < size; i++) {
-            Convert(args[2 + i], 8, 16);
-        }        
-    }
-
     else if (!strncmp(args[1], "-h", 2) || !strncmp(args[1], "--help", 6)) {
         PrintHelp(); 
     }
 
     else {
-        printf("Invalid argument.\n");
+        int iBase, oBase;
+
+             if (!strncmp(args[1], "-bd", 4)) { iBase = 2;  oBase = 10; }
+        else if (!strncmp(args[1], "-bd", 4)) { iBase = 2;  oBase = 10; }
+        else if (!strncmp(args[1], "-bh", 4)) { iBase = 2;  oBase = 16; }
+        else if (!strncmp(args[1], "-bo", 4)) { iBase = 2;  oBase = 8;  }
+        else if (!strncmp(args[1], "-db", 4)) { iBase = 10; oBase = 2;  }
+        else if (!strncmp(args[1], "-dh", 4)) { iBase = 10; oBase = 16; }
+        else if (!strncmp(args[1], "-do", 4)) { iBase = 10; oBase = 8;  }
+        else if (!strncmp(args[1], "-hb", 4)) { iBase = 16; oBase = 2;  }
+        else if (!strncmp(args[1], "-hd", 4)) { iBase = 16; oBase = 10; }
+        else if (!strncmp(args[1], "-ho", 4)) { iBase = 16; oBase = 8;  }
+        else if (!strncmp(args[1], "-ob", 4)) { iBase = 8;  oBase = 2;  }
+        else if (!strncmp(args[1], "-od", 4)) { iBase = 8;  oBase = 10; }
+        else if (!strncmp(args[1], "-oh", 4)) { iBase = 8;  oBase = 16; }
+        else { printf("Invalid argument.\n"); }
+
+        for (int i = 0; i < size; i++) {
+            Convert(args[2 + i], iBase, oBase);
+        }
     }
 }
 
