@@ -123,7 +123,6 @@ void ArgumentParser(char * args[], int size) {
         int iBase, oBase;
 
              if (!strncmp(args[1], "-bd", 4)) { iBase = 2;  oBase = 10; }
-        else if (!strncmp(args[1], "-bd", 4)) { iBase = 2;  oBase = 10; }
         else if (!strncmp(args[1], "-bh", 4)) { iBase = 2;  oBase = 16; }
         else if (!strncmp(args[1], "-bo", 4)) { iBase = 2;  oBase = 8;  }
         else if (!strncmp(args[1], "-db", 4)) { iBase = 10; oBase = 2;  }
