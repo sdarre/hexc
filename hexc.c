@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <limits.h>
+#define MIN_BASE 2
+#define MAX_BASE 36
 
 
 void ArgumentParser(char * args[], int size);
@@ -28,9 +30,9 @@ int main (int argc, char *argv[]) {
 int valid = 1;
 void Convert(char * input, int iBase, int oBase) {
 
-    if (iBase < 2 || iBase > 36 || oBase < 2 || oBase > 36) {
+    if (iBase < MIN_BASE || iBase > MAX_BASE || oBase < MIN_BASE || oBase > MAX_BASE) {
         printf("Bases must be between 2 and 36 (inclusive).\n");
-        return;
+        exit(0);
     }
 
     printf("%s -> ", input);
