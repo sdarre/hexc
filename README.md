@@ -32,7 +32,4 @@ hexc can be fed several strings, separated by whitespace. Bases can range from 2
 111 -> 7
 ~$ hexc -i8 -o16
 312 -> CA
-```  
-
-### To-do
-* Fix bug of inaccurate output when converting very large numbers
+```

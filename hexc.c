@@ -2,6 +2,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#define MAX_ULONG 18446744073709551615U
 
 void ArgumentParser(char * args[], int size);
 void Convert(char * input, int iBase, int oBase);
@@ -35,7 +36,13 @@ void Convert(char * input, int iBase, int oBase) {
     unsigned long l = iConvert(input, iBase);
     char * s;
 
-    if (l != -1) {
+    if (l == 0) {
+        printf("0");
+    }
+    else if (l >= MAX_ULONG) {
+        printf("Input value too large.");
+    }
+    else if (l != -1) {
         s = oConvert(l, oBase);
         for (int i = strlen(s); i >= 0; i--) {
             printf("%c", s[i]);
@@ -54,10 +61,13 @@ unsigned long iConvert(char * input, int iBase) {
 
     for (int i = (strlen(input) - 1); i >= 0; i--) {
         if ((input[i] > ('0' - 1)) && (input[i] < ('9' + 1))) {
-            result += (input[i] - '0') * pow(iBase, power++);
+            result += (input[i] - '0') * (unsigned long) pow(iBase, power++);
         }
-        else if ((((input[i] > ('A' - 1)) && (input[i] < ('Z' + 1))) || ((input[i] > ('a' - 1)) && (input[i] < ('z' + 1)))) && iBase > 10) {
-            result += (input[i] - ('A' - 10)) * pow(iBase, power++);
+        else if ((input[i] > ('A' - 1)) && (input[i] < ('Z' + 1)) && iBase > 10) {
+            result += (input[i] - ('A' - 10)) * (unsigned long) pow(iBase, power++);
+        }
+        else if ((input[i] > ('a' - 1)) && (input[i] < ('z' + 1)) && iBase > 10) {
+            result += (input[i] - ('a' - 10)) * (unsigned long) pow(iBase, power++);
         }
         else {
             printf("Invalid input string.");
@@ -69,9 +79,8 @@ unsigned long iConvert(char * input, int iBase) {
 
 
 char * oConvert(unsigned long input, int oBase) {
-
+    
     char * vector = malloc(sizeof(char) * 64);
-
     if (!vector) {
         printf("Memory error.\n");
         exit(0);
@@ -80,7 +89,7 @@ char * oConvert(unsigned long input, int oBase) {
     int i = 0;
     while (input > 0) {
         char c;
-        int n = input % oBase;
+        unsigned long n = input % oBase;
         input = input / oBase;
         if (n < 10) {
             c = n + '0';
