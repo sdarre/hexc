@@ -30,11 +30,6 @@ int main (int argc, char *argv[]) {
 int valid = 1;
 void Convert(char * input, int iBase, int oBase) {
 
-    if (iBase < MIN_BASE || iBase > MAX_BASE || oBase < MIN_BASE || oBase > MAX_BASE) {
-        printf("Bases must be between 2 and 36 (inclusive).\n");
-        exit(0);
-    }
-
     printf("%s -> ", input);
 
     unsigned long l = iConvert(input, iBase);
@@ -123,14 +118,29 @@ char * oConvert(unsigned long input, int oBase) {
 
 
 void ArgumentParser(char * args[], int size) {
+    
+    if (size > 0) { 
+        if (!strncmp(args[1], "-i", 2) && !strncmp(args[2], "-o", 2)) {
+               
+            if (strlen(args[1]) < 3 || strlen(args[2]) < 3) {
+                printf("Invalid argument.\n"); 
+                PrintHelp();
+                return;
+            } 
 
-    if (!strncmp(args[1], "-i", 2) && !strncmp(args[2], "-o", 2)) {
-        size--;
-        char iBase[3], oBase[3];
-        strncpy(iBase, args[1] + 2, strlen(args[1]) - 1);
-        strncpy(oBase, args[2] + 2, strlen(args[2]) - 1);
-        for (int i = 0; i < size; i++) {
-            Convert(args[3 + i], atoi(iBase), atoi(oBase));
+            size--;
+            char iBase[3], oBase[3];
+            strncpy(iBase, args[1] + 2, strlen(args[1]) - 1);
+            strncpy(oBase, args[2] + 2, strlen(args[2]) - 1);
+
+            if (atoi(iBase) < MIN_BASE || atoi(iBase) > MAX_BASE || atoi(oBase) < MIN_BASE || atoi(oBase) > MAX_BASE) {
+                printf("Bases must be between 2 and 36 (inclusive).\n");
+                return;
+            }
+
+            for (int i = 0; i < size; i++) {
+                Convert(args[3 + i], atoi(iBase), atoi(oBase));
+            }
         }
     }
 
@@ -153,7 +163,11 @@ void ArgumentParser(char * args[], int size) {
         else if (!strncmp(args[1], "-ob", 4)) { iBase = 8;  oBase = 2;  }
         else if (!strncmp(args[1], "-od", 4)) { iBase = 8;  oBase = 10; }
         else if (!strncmp(args[1], "-oh", 4)) { iBase = 8;  oBase = 16; }
-        else { printf("Invalid argument.\n"); }
+        else { 
+            printf("Invalid argument.\n"); 
+            PrintHelp();
+            return;
+        }
 
         for (int i = 0; i < size; i++) {
             Convert(args[2 + i], iBase, oBase);
@@ -165,7 +179,7 @@ void ArgumentParser(char * args[], int size) {
 void PrintHelp() {
     printf("Run \"hexc {operator} {string1 string2 string3...}\"\n");
     printf("or \"hexc {-i[input base size] -o[output base size] {string1 string2 string3...}\"\n");
-    printf("to produce a converted string or series of strings.\n");
+    printf("to produce a converted string or series of strings. The maximum input value is 18446744073709551615 (in decimal).\n");
     printf("The operators are as follows:\n\n");
     printf("| Operator |      Description       |\n");
     printf("|   -bd    | Binary to decimal      |\n");
@@ -183,5 +197,5 @@ void PrintHelp() {
     printf("Bases can range from 2 to 36 (inclusive).\n");
     printf("hexc can be fed several strings, separated by whitespace. For example:\n\n");  
     printf("| ~$ hexc -bd 10101 111\n| 10101 -> 21\n| 111 -> 7\n");
-    printf("| ~$ hexc -i8 -o16 \n| 312 -> CA\n");
+    printf("| ~$ hexc -i8 -o16 312\n| 312 -> CA\n");
 }
