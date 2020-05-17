@@ -4,7 +4,7 @@ Terminal program for converting to and from any base from 2 to 36.
 To build, run `make`. To install, build and run `sudo make install`.  To
 uninstall, run `sudo make uninstall`.
 
-Run `hexc {operator} {strings}` or `hexc {-i[input base size] -o[output base size]} {strings}` to produce a converted string or series of strings. The maximum value that can be entered for any given string is 18446744073709551615.  
+Run `hexc {operator} {strings}` or `hexc {-i[input base size] -o[output base size]} {strings}` to produce a converted string or series of strings. The maximum value that can be entered for any given string is 18446744073709551615 (in decimal).  
 
 The operators are as follows:  
 
