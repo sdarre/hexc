@@ -2,7 +2,6 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#include <limits.h>
 #define MIN_BASE 2
 #define MAX_BASE 36
 
