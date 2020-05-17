@@ -24,6 +24,6 @@ hexc can be fed several strings, separated by whitespace. Bases can range from 2
 ~$ hexc -bd 10101 111
 10101 -> 21
 111 -> 7
-~$ hexc -i8 -o16
+~$ hexc -i8 -o16 312
 312 -> CA
 ```
