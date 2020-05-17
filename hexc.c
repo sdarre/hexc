@@ -118,9 +118,9 @@ char * oConvert(unsigned long input, int oBase) {
 
 
 void ArgumentParser(char * args[], int size) {
-    
-    if (size > 0) { 
-        if (!strncmp(args[1], "-i", 2) && !strncmp(args[2], "-o", 2)) {
+
+    if (!strncmp(args[1], "-i", 2) && size > 0) { 
+        if (!strncmp(args[2], "-o", 2)) {
                
             if (strlen(args[1]) < 3 || strlen(args[2]) < 3) {
                 printf("Invalid argument.\n"); 
@@ -135,6 +135,12 @@ void ArgumentParser(char * args[], int size) {
 
             if (atoi(iBase) < MIN_BASE || atoi(iBase) > MAX_BASE || atoi(oBase) < MIN_BASE || atoi(oBase) > MAX_BASE) {
                 printf("Bases must be between 2 and 36 (inclusive).\n");
+                return;
+            }
+
+            if (size < 1) {
+                printf("No input values passed.\n");
+                PrintHelp();
                 return;
             }
 
@@ -165,6 +171,12 @@ void ArgumentParser(char * args[], int size) {
         else if (!strncmp(args[1], "-oh", 4)) { iBase = 8;  oBase = 16; }
         else { 
             printf("Invalid argument.\n"); 
+            PrintHelp();
+            return;
+        }
+
+        if (size < 1) {
+            printf("No input values passed.\n");
             PrintHelp();
             return;
         }
