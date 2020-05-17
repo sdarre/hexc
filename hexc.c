@@ -2,6 +2,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <limits.h>
 #define MIN_BASE 2
 #define MAX_BASE 36
 
@@ -56,33 +57,41 @@ void Convert(char * input, int iBase, int oBase) {
 
 unsigned long iConvert(char * input, int iBase) {
 
+
     unsigned long result = 0;
-    unsigned long overflowCheck = 0;
-    int power = 0;
+    unsigned long maxVal = ULONG_MAX / iBase;
+    int maxDigit = ULONG_MAX % iBase;
 
-    for (int i = (strlen(input) - 1); i >= 0; i--) {
+    for (;;) {
+        int c = *input++;
         
-        if ((input[i] > ('0' - 1)) && (input[i] < ('9' + 1))) {
-            result += (input[i] - '0') * (unsigned long) pow(iBase, power++);
-        }
-        else if ((input[i] > ('A' - 1)) && (input[i] < ('A' - 10 + iBase)) && iBase > 10) {
-            result += (input[i] - ('A' - 10)) * (unsigned long) pow(iBase, power++);
-        }
-        else if ((input[i] > ('a' - 1)) && (input[i] < ('a' - 10 + iBase)) && iBase > 10) {
-            result += (input[i] - ('a' - 10)) * (unsigned long) pow(iBase, power++);
-        }
+        int digit;
+        if (c >= '0' && c <= '9') {
+            digit = c - '0';
+        } 
+        else if (c >= 'A' && (c < ('A' - 10 + iBase)) && iBase > 10) {
+            digit = c - 'A' + 10;
+        } 
+        else if (c >= 'a' && (c < ('a' - 10 + iBase)) && iBase > 10) {
+            digit = c - 'a' + 10;
+        } 
         else {
-            printf("Invalid input string.");
-            valid = 0;
-            return -1;
+            if (c != 0) {
+                printf("Invalid input string.");
+                valid = 0;
+                return -1;
+            }
+            break;
         }
-
-        if (result < overflowCheck) {
+        if (digit >= iBase) {
+            break;
+        }
+        if (result > maxVal || (result == maxVal && digit > maxDigit)) {
             printf("Input value too large.");
             valid = 0;
             return -1;
         }
-        overflowCheck = result;
+        result = result * iBase + digit;
     }
     return result;
 }
