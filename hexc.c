@@ -122,8 +122,7 @@ void ArgumentParser(char * args[], int size) {
         if (!strncmp(args[2], "-o", 2)) {
                
             if (strlen(args[1]) < 3 || strlen(args[2]) < 3) {
-                printf("Invalid argument.\n"); 
-                PrintHelp();
+                printf("Invalid argument. See \"hexc --help\".\n"); 
                 return;
             } 
 
@@ -133,13 +132,12 @@ void ArgumentParser(char * args[], int size) {
             strncpy(oBase, args[2] + 2, strlen(args[2]) - 1);
 
             if (atoi(iBase) < MIN_BASE || atoi(iBase) > MAX_BASE || atoi(oBase) < MIN_BASE || atoi(oBase) > MAX_BASE) {
-                printf("Bases must be between 2 and 36 (inclusive).\n");
+                printf("Bases must be between 2 and 36 (inclusive). See \"hexc --help\".\n");
                 return;
             }
 
             if (size < 1) {
-                printf("No input values passed.\n");
-                PrintHelp();
+                printf("No input values passed. See \"hexc --help\".\n");
                 return;
             }
 
@@ -169,14 +167,12 @@ void ArgumentParser(char * args[], int size) {
         else if (!strncmp(args[1], "-od", 4)) { iBase = 8;  oBase = 10; }
         else if (!strncmp(args[1], "-oh", 4)) { iBase = 8;  oBase = 16; }
         else { 
-            printf("Invalid argument.\n"); 
-            PrintHelp();
+            printf("Invalid argument. See \"hexc --help\".\n"); 
             return;
         }
 
         if (size < 1) {
-            printf("No input values passed.\n");
-            PrintHelp();
+            printf("No input values passed. See \"hexc --help\".\n");
             return;
         }
 
@@ -188,25 +184,28 @@ void ArgumentParser(char * args[], int size) {
 
 
 void PrintHelp() {
-    printf("Run \"hexc {operator} {string1 string2 string3...}\"\n");
-    printf("or \"hexc {-i[input base size] -o[output base size] {string1 string2 string3...}\"\n");
-    printf("to produce a converted string or series of strings. The maximum input value is 18446744073709551615 (in decimal).\n");
-    printf("The operators are as follows:\n\n");
-    printf("| Operator |      Description       |\n");
-    printf("|   -bd    | Binary to decimal      |\n");
-    printf("|   -bh    | Binary to hexadecimal  |\n");
-    printf("|   -bo    | Binary to octal        |\n");
-    printf("|   -db    | Decimal to binary      |\n");
-    printf("|   -dh    | Decimal to hexadecimal |\n");
-    printf("|   -do    | Decimal to octal       |\n");
-    printf("|   -hb    | Hexadecimal to binary  |\n");
-    printf("|   -hd    | Hexadecimal to decimal |\n");
-    printf("|   -ho    | Hexadecimal to octal   |\n");
-    printf("|   -ob    | Octal to binary        |\n");
-    printf("|   -od    | Octal to decimal       |\n");
-    printf("|   -oh    | Octal to hexadecimal   |\n\n");
-    printf("Bases can range from 2 to 36 (inclusive).\n");
-    printf("hexc can be fed several strings, separated by whitespace. For example:\n\n");  
-    printf("| ~$ hexc -bd 10101 111\n| 10101 -> 21\n| 111 -> 7\n");
-    printf("| ~$ hexc -i8 -o16 312\n| 312 -> CA\n");
+    printf("Usage:\n");
+    printf("    hexc [Option] [String(s)]\n\n");
+    printf("Options:\n");
+    printf("    -i[input base] -o[output base]      Convert from input base to output base\n");
+    printf("    -bd      Convert from binary to decimal\n");
+    printf("    -bh      Convert from binary to hexadecimal\n");
+    printf("    -bo      Convert from binary to octal\n");
+    printf("    -db      Convert from decimal to binary\n");
+    printf("    -dh      Convert from decimal to hexadecimal\n");
+    printf("    -do      Convert from decimal to octal\n");
+    printf("    -hb      Convert from hexadecimal to binary\n");
+    printf("    -hd      Convert from hexadecimal to decimal\n");
+    printf("    -ho      Convert from hexadecimal to octal\n");
+    printf("    -ob      Convert from octal to binary\n");
+    printf("    -od      Convert from octal to decimal\n");
+    printf("    -oh      Convert from octal to hexadecimal\n\n");
+    printf("Bases can range from 2 to 36. hexc can be fed several strings, separated by whitespace.\n");
+    printf("The maximum input value for any given string is 18446744073709551615 in decimal.\n\n");
+    printf("Examples:\n");
+    printf("    ~$ hexc -bd 10101 111\n");
+    printf("    10101 -> 21\n");
+    printf("    111 -> 7\n");
+    printf("    ~$ hexc -i8 -o16 312\n");
+    printf("    312 -> CA\n");
 }
