@@ -1,7 +1,7 @@
 all: build
 
 build:
-	gcc hexc.c -lm -o hexc
+	gcc hexc.c -o hexc
 
 install:
 	mv hexc /usr/local/bin
