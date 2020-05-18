@@ -60,7 +60,7 @@ unsigned long iConvert(char * input, int iBase) {
         int c = *input++;
         
         int digit;
-        if (c >= '0' && c <= '9') {
+        if ((c >= '0' && c <= '9' && iBase >= 10) || (c >= '0' && c <= ('0' - 1 + iBase))) {
             digit = c - '0';
         } 
         else if (c >= 'A' && (c < ('A' - 10 + iBase)) && iBase > 10) {
@@ -147,7 +147,7 @@ void ArgumentParser(char * args[], int size) {
         }
     }
 
-    else if (!strncmp(args[1], "-h", 2) || !strncmp(args[1], "--help", 6)) {
+    else if (!strncmp(args[1], "-h", 3) || !strncmp(args[1], "--help", 6)) {
         PrintHelp(); 
     }
 
