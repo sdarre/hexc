@@ -93,7 +93,7 @@ unsigned long iConvert(char * input, int iBase) {
 
 char * oConvert(unsigned long input, int oBase) {
     
-    char * vector = malloc(sizeof(char) * 64);
+    char * vector = calloc(64, sizeof(char));
     if (!vector) {
         printf("Memory error.\n");
         exit(0);
