@@ -145,6 +145,10 @@ void ArgumentParser(char * args[], int size) {
                 Convert(args[3 + i], atoi(iBase), atoi(oBase));
             }
         }
+        else {
+            printf("Invalid argument. See \"hexc --help\".\n"); 
+            return;
+        }
     }
 
     else if (!strncmp(args[1], "-h", 3) || !strncmp(args[1], "--help", 6)) {
