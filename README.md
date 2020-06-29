@@ -17,7 +17,7 @@ The operators are as follows:
 | -dh        | Decimal to hexadecimal | -od        | Octal to decimal       |
 | -do        | Decimal to octal       | -oh        | Octal to hexadecimal   |  
 
-hexc can be fed several strings, separated by whitespace. Bases can range from 2 to 36 (inclusive). The maximum value that can be entered for any given string is 18446744073709551615 (in decimal).  
+hexc can be fed several strings, separated by whitespace. Bases can range from 2 to 36. The maximum value that can be entered for any given string is 18446744073709551615<sub>dec</sub>.  
 
 ### Examples
 ```
