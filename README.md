@@ -1,5 +1,5 @@
 ## hexc
-Terminal program for converting to and from any base from 2 to 36.  **Not yet tested in Windows**.  
+Terminal program for converting to and from any base from 2 to 36.
 
 To build, run `make`. To install, build and run `sudo make install`.  To
 uninstall, run `sudo make uninstall`.
