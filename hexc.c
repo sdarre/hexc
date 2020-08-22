@@ -1,3 +1,22 @@
+//
+// hexc - a number base converter for the terminal
+// Copyright (C) 2020 Santiago Darre
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -14,26 +33,20 @@ void PrintHelp();
 
 
 int main (int argc, char *argv[]) {
-
     if (argc <= 1) {
         PrintHelp();
         return 0;
     }
-
     ArgumentParser(argv, (argc - 2));
-    
     return 0;
 }
 
 
 int valid = 1;
 void Convert(char * input, int iBase, int oBase) {
-
     printf("%s -> ", input);
-
     unsigned long l = iConvert(input, iBase);
     char * s;
-
     if (l == 0) {
         printf("0");
     }
@@ -50,15 +63,11 @@ void Convert(char * input, int iBase, int oBase) {
 
 
 unsigned long iConvert(char * input, int iBase) {
-
-
     unsigned long result = 0;
     unsigned long maxVal = ULONG_MAX / iBase;
     int maxDigit = ULONG_MAX % iBase;
-
     for (;;) {
         int c = *input++;
-        
         int digit;
         if ((c >= '0' && c <= '9' && iBase >= 10) || (c >= '0' && c <= ('0' - 1 + iBase))) {
             digit = c - '0';
@@ -92,13 +101,11 @@ unsigned long iConvert(char * input, int iBase) {
 
 
 char * oConvert(unsigned long input, int oBase) {
-    
     char * vector = calloc(64, sizeof(char));
     if (!vector) {
         printf("Memory error.\n");
         exit(0);
     }
-
     int i = 0;
     while (input > 0) {
         char c;
@@ -117,32 +124,28 @@ char * oConvert(unsigned long input, int oBase) {
 
 
 void ArgumentParser(char * args[], int size) {
-
     if (!strncmp(args[1], "-i", 2) && size > 0) { 
-        if (!strncmp(args[2], "-o", 2)) {
-               
+        if (!strncmp(args[2], "-o", 2)) {    
             if (strlen(args[1]) < 3 || strlen(args[2]) < 3) {
                 printf("Invalid argument. See \"hexc --help\".\n"); 
                 return;
             } 
-
             size--;
-            char iBase[3], oBase[3];
-            strncpy(iBase, args[1] + 2, strlen(args[1]) - 1);
-            strncpy(oBase, args[2] + 2, strlen(args[2]) - 1);
-
-            if (atoi(iBase) < MIN_BASE || atoi(iBase) > MAX_BASE || atoi(oBase) < MIN_BASE || atoi(oBase) > MAX_BASE) {
+            char iBaseString[3], oBaseString[3];
+            strncpy(iBaseString, args[1] + 2, strlen(args[1]) - 1);
+            strncpy(oBaseString, args[2] + 2, strlen(args[2]) - 1);
+            int iBase = atoi(iBaseString);
+            int oBase = atoi(oBaseString);
+            if (iBase < MIN_BASE || iBase > MAX_BASE || oBase < MIN_BASE || oBase > MAX_BASE) {
                 printf("Bases must be between 2 and 36 (inclusive). See \"hexc --help\".\n");
                 return;
             }
-
             if (size < 1) {
                 printf("No input values passed. See \"hexc --help\".\n");
                 return;
             }
-
             for (int i = 0; i < size; i++) {
-                Convert(args[3 + i], atoi(iBase), atoi(oBase));
+                Convert(args[3 + i], iBase, oBase);
             }
         }
         else {
@@ -150,14 +153,11 @@ void ArgumentParser(char * args[], int size) {
             return;
         }
     }
-
     else if (!strncmp(args[1], "-h", 3) || !strncmp(args[1], "--help", 6)) {
         PrintHelp(); 
     }
-
     else {
         int iBase, oBase;
-
              if (!strncmp(args[1], "-bd", 4)) { iBase = 2;  oBase = 10; }
         else if (!strncmp(args[1], "-bh", 4)) { iBase = 2;  oBase = 16; }
         else if (!strncmp(args[1], "-bo", 4)) { iBase = 2;  oBase = 8;  }
@@ -174,12 +174,10 @@ void ArgumentParser(char * args[], int size) {
             printf("Invalid argument. See \"hexc --help\".\n"); 
             return;
         }
-
         if (size < 1) {
             printf("No input values passed. See \"hexc --help\".\n");
             return;
         }
-
         for (int i = 0; i < size; i++) {
             Convert(args[2 + i], iBase, oBase);
         }
